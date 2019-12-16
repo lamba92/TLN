@@ -22,7 +22,7 @@ The subset of POS has been chosen by analyzing the sentences taken into account 
 
 The grammar is in CNF, that is the _Chomsky Normal Form_, where the left side is exactly one _non terminal_ and the right side is either a single _terminal_ or exactly 2 _non terminals_.
 
-You can check out the grammar file [here]()!
+You can check out the grammar file [here](/I/src/main/resources/grammar.cfg)!
 
 ### Data structures
 
@@ -73,11 +73,11 @@ class Tree<K>(val root: Node<K>) : Iterable<Tree.Node<K>> {
 
 #### ChomskyMatrix
 
-The code here is a bit longer so i'll just [link it]().
+The code here is a bit longer so i'll just [link it](/I/src/main/kotlin/com/github/lamba92/tln/ChomskyMatrix.kt).
 
 It has been implemented using an array of array which is spanned using the CKY algorithm. It takes as an input a grammar and the list of words of the sentence and feeds them to the `ckyParse` function which in return fills up the matrix and builds all the possible trees. 
 
-It exposes the root trees built with the synthetic property [`rootTrees`]().
+It exposes the root trees built with the synthetic property [`rootTrees`](/I/src/main/kotlin/com/github/lamba92/tln/ChomskyMatrix.kt#L22-L23).
 
 #### ckyParse
 
