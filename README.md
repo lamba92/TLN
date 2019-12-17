@@ -1,6 +1,6 @@
 # TLN projects
 
- - SECTION I | [Language Transfer](#section-i-|-transfer-translation)
+ - SECTION I | [Language Transfer](#section-i--transfer-translation)
    - [Introduction](#introduction)
    - [Grammar](#grammar)
    - [Code](#code)
