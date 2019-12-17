@@ -30,7 +30,7 @@ The POS used is a subset of [_Universal POS Tags_](https://www.sketchengine.eu/u
 
 The subset of POS has been chosen by analyzing the sentences taken into account and only for the available words has been created a terminal right hand side. The rules available have been built by Googling around how the Italian grammar is structured. 
 
-The grammar is in CNF, that is the _Chomsky Normal Form_, where the left side is exactly one _non terminal_ and the right side is either a single _terminal_ or exactly 2 _non terminals_.
+The grammar is in CNF, that is the [_Chomsky Normal Form_](https://en.wikipedia.org/wiki/Chomsky_normal_form), where the left side is exactly one _non terminal_ and the right side is either a single _terminal_ or exactly 2 _non terminals_.
 
 You can check out the grammar file [here](https://github.com/lamba92/TLN/blob/master/I/src/main/resources/grammar.cfg)!
 
@@ -53,7 +53,7 @@ data class Grammar(val grammarRules: Set<ChomskyNormalFormGrammarRule>)
 ```
 Here we have some basic structures: 
  - `GrammarElement` is the basis of the grammar framework, it's only property is the `literal` that unambiguously identifies it;
-  - `ChomskyNormalFormGrammarRule` holds a Chomsky's normal form rule (ie. `A -> BC` or `A -> 'Skywalker'`); it is composed by two components: _left hand side_ and _right hand side_ where the first is a `GrammarElement` while the second can be a `RHS.Terminal` or an `RHS.NonTerminals`;
+  - `ChomskyNormalFormGrammarRule` holds a Chomsky's normal form rule (ie. `A -> BC` or `A -> 'Skywalker'`); it is composed by two components: _left hand side_ and _right hand side_ where the first is a `GrammarElement` while the second can be a `RHS.Terminal` or a `RHS.NonTerminals`;
   - `RHS` is a [`sealed`](https://kotlinlang.org/docs/reference/sealed-classes.html) class that can only be either:
     - `Terminal`: a grammar element from which no other rule can follow;
     - `NonTerminals`: pair of grammar elements whereas from each a rule will be trailed around with;
@@ -94,13 +94,13 @@ It exposes the root trees built with the synthetic property [`rootTrees`](https:
 It is the core of the `ChomskyMatrix` class. It fills up the Chomsky Matrix from the given grammar and sentence with binary trees built using a bottom-up approach.
 If the input sentence is grammatically correct in the sense of the given grammar, the algorithm will put in the top right most cell of the matrix all the possible grammatically correct trees which will be accessible using `rootTrees`. 
 
-NB: the top-right-most cell of the matrix contains not only the starting trees. When using `rootTrees` property, they will be filtered bit root literal == `S`  
+NB: the top-right-most cell of the matrix contains not only the starting trees. When using `rootTrees` property, they will be filtered by root `literal == "S"`  
 
 ## Translation
 The approach used is _Language Transfer_. Both, input and target language have been analyzed with the goal of finding some translation rules that allow translation on the sample sentences.
 Those rules have to manipulate the tree built with the ckyParse on the sentence in the input language so that it is grammatically correct in the output language.
 
-NB: Yoddish language is a particular case of translation since it uses the same vocabulary of the input language. in a real language to language translation the vocabulary and the syntax must be taken into account.
+NB: Yoddish language is a particular case of translation since it uses the same vocabulary of the input language. In a real language to language translation the vocabulary and the syntax must be taken into account.
 
 For each sample sentence its constituent tree has been analyzed to find the proper set of transformations to apply on it in order to achieve the translation:
 ```kotlin
@@ -120,10 +120,9 @@ The algorithm iterates on every grammar element of the sentence and after the tr
 The implementation is far more readable then the description itself, have a look [here](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L92-L117)!
 
 ### Visualization
-Unfortunately, I was not able to find a proper solution in JVM to easily visualize a binary tree. 
-at the moment, [GraphStream](http://graphstream-project.org/) has been used to visualize constituent, but which is more suitable for visualizing graphs. The consequence is that the draw is misplaced (even though the edges are directed correctly) and the information about left or right child is lost. Nonetheless it is possible to understand the results.
+Unfortunately, I was not able to find a proper solution in JVM to easily visualize a binary tree. At the moment, [GraphStream](http://graphstream-project.org/) has been used to visualize constituent trees, but the library is more suitable for visualizing graphs. The consequence is that the draw is misplaced (even though the edges are directed correctly) and the information about left or right child is lost. Nonetheless it is possible to understand the results.
 
 ### Utilities
-Since I did not rely on external libraries, mostly due to poor or inexistent tutorials on this use cases for the JVM environment and/or poor documentation for every NLP library out there, [I decided to write a parser for a grammar `.cgf` file](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L1-L43). 
+Since I did not rely on external libraries, mostly due to poor or inexistent tutorials on this use cases for the JVM environment and/or poor documentation for every NLP library out there, [I decided to write a parser for a grammar `.cgf` file](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L11-L43). 
 
 Also since I've use a custom implementation of a tree, to visualize it I [converted](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L45-L81) it to a direct `Graph`.
