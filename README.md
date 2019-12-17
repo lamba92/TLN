@@ -2,6 +2,15 @@
 
  - SECTION I - Language Transfer
    - [Introduction](#introduction)
+   - [Grammar](#grammar)
+   - [Code](#code)
+     - [Data structures](#data-structures)
+     - [Binary Tree](#binary-tree)
+     - [ChomskyMatrix](#chomskymatrix)
+     - [ckyParse](#ckyparse)
+   - [Translation](#translation)
+   - [Visualization](#visualization)
+   - [Utilities](#utilities)
  - SECTION II - coming soon
  - SECTION III - [Document clustering](https://drive.google.com/open?id=1I-VFVcpOMebVGQ0c5FC2mYaoGEOu5XuR)
 
@@ -25,9 +34,9 @@ The grammar is in CNF, that is the _Chomsky Normal Form_, where the left side is
 
 You can check out the grammar file [here](https://github.com/lamba92/TLN/blob/master/I/src/main/resources/grammar.cfg)!
 
-### Data structures
+### Code
 
-#### Grammar
+#### Data structures
  
 Now, let's walk through the basic data structures that has been used:
 ```kotlin
@@ -87,7 +96,7 @@ If the input sentence is grammatically correct in the sense of the given grammar
 
 NB: the top-right-most cell of the matrix contains not only the starting trees. When using `rootTrees` property, they will be filtered bit root literal == `S`  
 
-### Translation
+## Translation
 The approach used is _Language Transfer_. Both, input and target language have been analyzed with the goal of finding some translation rules that allow translation on the sample sentences.
 Those rules have to manipulate the tree built with the ckyParse on the sentence in the input language so that it is grammatically correct in the output language.
 
