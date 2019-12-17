@@ -1,6 +1,7 @@
 # TLN projects
 
  - SECTION I - Language Transfer
+   - [Introduction](#introduction)
  - SECTION II - coming soon
  - SECTION III - [Document clustering](https://drive.google.com/open?id=1I-VFVcpOMebVGQ0c5FC2mYaoGEOu5XuR)
 
@@ -107,7 +108,13 @@ This map is the the output of the process above written. The translation algorit
 
 The algorithm iterates on every grammar element of the sentence and after the transformation per each element it starts over using the new tree.
 
+The implementation is far more readable then the description itself, have a look [here](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L92-L117)!
+
 ### Visualization
-Unfortunately, I was not able to find a proper solution in JVM to visualize a binary tree. I found [GraphStream](http://graphstream-project.org/) library which is more suitable for visualizing graphs. The consequence is that the draw is misplaced (even though the edges are directed correctly) and the information about left or right child is lost. Nonetheless it is possible to understand the results.
+Unfortunately, I was not able to find a proper solution in JVM to easily visualize a binary tree. 
+at the moment, [GraphStream](http://graphstream-project.org/) has been used to visualize constituent, but which is more suitable for visualizing graphs. The consequence is that the draw is misplaced (even though the edges are directed correctly) and the information about left or right child is lost. Nonetheless it is possible to understand the results.
 
 ### Utilities
+Since I did not rely on external libraries, mostly due to poor or inexistent tutorials on this use cases for the JVM environment and/or poor documentation for every NLP library out there, [I decided to write a parser for a grammar `.cgf` file](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L1-L43). 
+
+Also since I've use a custom implementation of a tree, to visualize it I [converted](https://github.com/lamba92/TLN/blob/master/I/src/main/kotlin/com/github/lamba92/tln/Utils.kt#L45-L81) it to a direct `Graph`.
