@@ -1,6 +1,6 @@
 # TLN projects
 
- - SECTION I | [Language Transfer](#section-i--transfer-translation)
+ - SECTION I - [Language Transfer](#section-i--transfer-translation)
    - [Introduction](#introduction)
    - [Grammar](#grammar)
    - [Code](#code)
@@ -11,10 +11,10 @@
    - [Translation](#translation)
    - [Visualization](#visualization)
    - [Utilities](#utilities)
- - SECTION II | coming soon
- - SECTION III | [Document clustering](https://drive.google.com/open?id=1I-VFVcpOMebVGQ0c5FC2mYaoGEOu5XuR)
+ - SECTION II - coming soon
+ - SECTION III - [Document clustering](https://drive.google.com/open?id=1I-VFVcpOMebVGQ0c5FC2mYaoGEOu5XuR)
 
-## Section I | Transfer translation
+## Section I - Transfer translation
 
 ### Introduction
 
