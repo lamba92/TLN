@@ -1,4 +1,4 @@
-## Section II - Semnatic Resources
+## Section II - Semantic Resources
 
  - [Introduction](#introduction)
  - [Conceptual Similarity](#conceptual-similarity)
