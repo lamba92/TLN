@@ -1,3 +1,7 @@
+plugins {
+    kotlin("jvm") apply false
+}
+
 allprojects {
     group = "com.github.lamba92"
     version = "1.0-SNAPSHOT"
@@ -7,5 +11,7 @@ allprojects {
         maven("https://jitpack.io")
         maven("https://dl.bintray.com/kotlin/kotlin-eap")
         maven("https://dl.bintray.com/mipt-npm/scientifik")
+        maven("https://kotlin.bintray.com/kotlinx")
+        maven("https://kotlin.bintray.com/ktor/")
     }
 }

@@ -35,23 +35,26 @@ suspend fun main() {
 
     val nasari = Resources.MINI_NASARI
 
+    val nasariSimilarityScores = basti.asFlow()
+        .map { senseSimilarity(it.word1, it.word2, nasari) }.toList()
+
     val bastiNasariPearsonScore = pearsonCorrelationCoefficient(
-        basti.asFlow().map { senseSimilarity(it.word1, it.word2, nasari) }.toList(),
+        nasariSimilarityScores.map { it.cosineSimilarity },
         basti.map { it.score.toDouble() }
     )
 
     val bastiNasariSpearmanScore = spearmanRankCorrelationCoefficient(
-        basti.asFlow().map { senseSimilarity(it.word1, it.word2, nasari) }.toList(),
+        nasariSimilarityScores.map { it.cosineSimilarity },
         basti.map { it.score.toDouble() }
     )
 
     val pregnoNasariPearsonScore = spearmanRankCorrelationCoefficient(
-        pregno.asFlow().map { senseSimilarity(it.word1, it.word2, nasari) }.toList(),
+        nasariSimilarityScores.map { it.cosineSimilarity },
         pregno.map { it.score.toDouble() }
     )
 
     val pregnoNasariSpearmanScore = spearmanRankCorrelationCoefficient(
-        pregno.asFlow().map { senseSimilarity(it.word1, it.word2, nasari) }.toList(),
+        nasariSimilarityScores.map { it.cosineSimilarity },
         pregno.map { it.score.toDouble() }
     )
 

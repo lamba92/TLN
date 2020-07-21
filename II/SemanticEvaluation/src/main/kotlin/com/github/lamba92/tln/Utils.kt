@@ -1,12 +1,6 @@
 package com.github.lamba92.tln
 
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.request.*
 import io.ktor.util.*
-import kotlinx.serialization.Serializable
 import org.apache.commons.math3.util.MathArrays
 
 fun DoubleArray.euclideanNorm() =
@@ -26,44 +20,47 @@ fun dotProduct(array1: DoubleArray, array2: DoubleArray) =
         acc + n1 * n2
     }
 
-typealias MiniNasari = Map<String, DoubleArray>
-
 @ExperimentalStdlibApi
 @KtorExperimentalAPI
-suspend fun senseSimilarity(word1: String, word2: String, nasari: MiniNasari): Double {
+suspend fun senseSimilarity(word1: String, word2: String, nasari: MiniNasari): SenseIdentificationResult {
 
-    val w1NasariMeanings = lookupBabelSynsetsByLemma(word1)
-        .mapNotNull { nasari[it] }
-    val w2NasariMeanings = lookupBabelSynsetsByLemma(word2)
-        .mapNotNull { nasari[it] }
-    return buildList {
-        w1NasariMeanings.forEach { w1Array ->
-            w2NasariMeanings.forEach { w2Array ->
-                add(cosineSimilarity(w1Array, w2Array))
+    val w1NasariMeanings = BabelNetApi.lookupBabelSynsetsByLemma(word1)
+        .mapNotNull { id ->
+            nasari[id]?.let { id to it }
+        }
+        .toMap()
+    val w2NasariMeanings = BabelNetApi.lookupBabelSynsetsByLemma(word2)
+        .mapNotNull { id ->
+            nasari[id]?.let { id to it }
+        }
+        .toMap()
+
+    return buildMap<Pair<String, String>, Double> {
+        w1NasariMeanings.forEach { (idW1, w1Array) ->
+            w2NasariMeanings.forEach { (idW2, w2Array) ->
+                put(idW1 to idW2, cosineSimilarity(w1Array, w2Array))
             }
         }
-    }.maxOf { it }
-
-}
-
-@KtorExperimentalAPI
-val HTTP_CLIENT by lazy {
-    HttpClient(CIO) {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer()
-        }
     }
+        .maxByOrNull { it.value }!!
+        .let {
+            SenseIdentificationResult(
+                word1,
+                it.key.first,
+                word2,
+                it.key.second,
+                it.value
+            )
+        }
+
 }
 
-val BABEL_NET_API_KEY: String by System.getenv()
+data class SenseIdentificationResult(
+    val word1: String,
+    val word1BabelSynsetId: String,
+    val word2: String,
+    val word2BabelSynsetId: String,
+    val cosineSimilarity: Double
+)
 
-@Serializable
-data class BabelNetIdQuery(val id: String, val pos: String, val source: String)
-
-@KtorExperimentalAPI
-suspend fun lookupBabelSynsetsByLemma(lemma: String) =
-    HTTP_CLIENT.get<List<BabelNetIdQuery>>("https://babelnet.io/v5/getSynsetIds") {
-        parameter("lemma", lemma)
-        parameter("searchLang", "IT")
-        parameter("key", BABEL_NET_API_KEY)
-    }.map { it.id }
+typealias MiniNasari = Map<String, DoubleArray>

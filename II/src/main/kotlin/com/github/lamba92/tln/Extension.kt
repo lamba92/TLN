@@ -78,3 +78,12 @@ fun Synset.shortestPathDistance(s2: Synset): Int? {
     }
     return dist
 }
+
+inline fun <T, R> Iterable<T>.firstNotNull(function: (T) -> R?): R? {
+    forEach {
+        val result = function(it)
+        if (result != null)
+            return result
+    }
+    return null
+}

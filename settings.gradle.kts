@@ -22,5 +22,5 @@ pluginManagement {
 
 rootProject.name = "TLN"
 
-include("I", "II", "II:WSD", "II:SemanticEvaluation")
+include("I", "II", "II:WSD", "II:SemanticEvaluation", "II:AutomaticSummarization")
 
