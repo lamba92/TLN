@@ -111,3 +111,47 @@ Results:
 | ------------- | ------------- | ------------- | ------------- |
 | **Accuracy**         |  0.46  | 0.46  | 0.56 |  
 
+
+###FrameNet
+
+Come prima operazione si individua un insieme di frame mediante la funzione getFrameSetForStudent(cognome).
+
+In seguito per ogni frame nel FrameSet è necessario assegnare un WN synset ai seguenti elementi: 
+- Frame name;
+- Frame Elements (FEs) del frame; 
+- Lexical Units (LUs).
+
+A questo punto si esegue un mapping tramite l'approccio di **bag of words** con la seguente formula:
+
+![proj image](assets/bag_of_word.png)
+
+Come sempre i dati non valgono molto senza una valutazione.
+A questo fine è necessario annotare con WN synset ID tutti gli elementi da mappare:
+
+- Frame name
+- Frame Elements (FEs) del frame;
+- Lexical Units (LUs).
+
+Student: **Basti**
+
+|  ID | frame |
+| ------------- | ------------- |
+| 810 | Measure_by_action | 
+| 347 | Revenge | 
+| 1041 | Left_to_do | 
+| 1182 | Post_receiving | 
+| 1322 | Active_substance | 
+
+Student: **Pregno**
+
+|  ID | frame |
+| ------------- | ------------- |
+| 5 | Causation | 
+| 384 | Experience_bodily_harm | 
+| 228 | Being_named | 
+| 2654 | Controller_object | 
+| 156 | Measure_area | 
+
+Infine si esegue il rapporto fra l'output del sistema e le annotazioni manuali per vedere quanto queste si discostino.
+
+###Automatic Summarization
