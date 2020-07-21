@@ -2,4 +2,4 @@
 
  - SECTION I - [Language Transfer](/LanguageTransfer)
  - SECTION II - [Semantic Resources](/SemanticResources)
- - SECTION III - [Document clustering](https://drive.google.com/open?id=1I-VFVcpOMebVGQ0c5FC2mYaoGEOu5XuR)
+ - SECTION III - [Document clustering](https://colab.research.google.com/drive/1-boUpViKAyYOiaI3BhOtEcl6qME258_b?usp=sharing) (External Colab notebook)

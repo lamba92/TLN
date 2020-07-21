@@ -25,7 +25,7 @@ rootProject.name = "TLN"
 include(
     "LanguageTransfer",
     "SemanticResources",
-    "SemanticResources:WSD",
+    "SemanticResources:ConceptualSimilarity",
     "SemanticResources:SemanticEvaluation",
     "SemanticResources:AutomaticSummarization"
 )

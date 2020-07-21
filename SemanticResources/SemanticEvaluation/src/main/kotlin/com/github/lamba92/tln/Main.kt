@@ -17,8 +17,8 @@ data class ManualAnnotation(val word1: String, val word2: String, val score: Flo
 @ExperimentalStdlibApi
 suspend fun main() {
 
-    val basti = Resources.getAnnotatedPairs("annotations/basti.txt", items = 2)
-    val pregno = Resources.getAnnotatedPairs("annotations/pregno.txt", items = 2)
+    val basti = Resources.getAnnotatedPairs("annotations/basti.txt")
+    val pregno = Resources.getAnnotatedPairs("annotations/pregno.txt")
 
     val pearson = pearsonCorrelationCoefficient(
         basti.map { it.score.toDouble() },
@@ -35,26 +35,37 @@ suspend fun main() {
 
     val nasari = Resources.MINI_NASARI
 
-    val nasariSimilarityScores = basti.asFlow()
-        .map { senseSimilarity(it.word1, it.word2, nasari) }.toList()
+    val nasariSimilarityScores = basti
+        .asFlow()
+        .map { nasari.senseSimilarity(it.word1, it.word2) }
+        .toList()
+
+    println("Best senses found:")
+    nasariSimilarityScores.filterNotNull().forEach { (w1, s1, w2, s2, cs) ->
+        println(" - $w1 -> $s1 | $w2 -> $s2 | cosine similarity: $cs")
+    }
+
+    val nasariSimilarityScoresMean =
+        nasariSimilarityScores.mapNotNull { it?.cosineSimilarity }
+            .mean()
 
     val bastiNasariPearsonScore = pearsonCorrelationCoefficient(
-        nasariSimilarityScores.map { it.cosineSimilarity },
+        nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
         basti.map { it.score.toDouble() }
     )
 
     val bastiNasariSpearmanScore = spearmanRankCorrelationCoefficient(
-        nasariSimilarityScores.map { it.cosineSimilarity },
+        nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
         basti.map { it.score.toDouble() }
     )
 
     val pregnoNasariPearsonScore = spearmanRankCorrelationCoefficient(
-        nasariSimilarityScores.map { it.cosineSimilarity },
+        nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
         pregno.map { it.score.toDouble() }
     )
 
     val pregnoNasariSpearmanScore = spearmanRankCorrelationCoefficient(
-        nasariSimilarityScores.map { it.cosineSimilarity },
+        nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
         pregno.map { it.score.toDouble() }
     )
 
@@ -64,4 +75,6 @@ suspend fun main() {
     println(" - Pregno | Pearson: $pregnoNasariPearsonScore")
     println(" - Pregno | Spearman: $pregnoNasariSpearmanScore")
 
+
 }
+

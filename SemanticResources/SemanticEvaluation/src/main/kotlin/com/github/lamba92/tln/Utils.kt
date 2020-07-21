@@ -22,17 +22,14 @@ fun dotProduct(array1: DoubleArray, array2: DoubleArray) =
 
 @ExperimentalStdlibApi
 @KtorExperimentalAPI
-suspend fun senseSimilarity(word1: String, word2: String, nasari: MiniNasari): SenseIdentificationResult {
+suspend fun MiniNasari.senseSimilarity(word1: String, word2: String): SenseIdentificationResult? {
 
     val w1NasariMeanings = BabelNetApi.lookupBabelSynsetsByLemma(word1)
-        .mapNotNull { id ->
-            nasari[id]?.let { id to it }
-        }
+        .mapNotNull { id -> this[id]?.let { id to it } }
         .toMap()
+
     val w2NasariMeanings = BabelNetApi.lookupBabelSynsetsByLemma(word2)
-        .mapNotNull { id ->
-            nasari[id]?.let { id to it }
-        }
+        .mapNotNull { id -> this[id]?.let { id to it } }
         .toMap()
 
     return buildMap<Pair<String, String>, Double> {
@@ -42,8 +39,8 @@ suspend fun senseSimilarity(word1: String, word2: String, nasari: MiniNasari): S
             }
         }
     }
-        .maxByOrNull { it.value }!!
-        .let {
+        .maxByOrNull { it.value }
+        ?.let {
             SenseIdentificationResult(
                 word1,
                 it.key.first,
@@ -64,3 +61,15 @@ data class SenseIdentificationResult(
 )
 
 typealias MiniNasari = Map<String, DoubleArray>
+
+fun Iterable<Double>.mean() = with(iterator()) {
+    if (!hasNext())
+        error("Iterable is empty")
+    var sum = 0.0
+    var size = 0
+    while (hasNext()) {
+        size++
+        sum += next()
+    }
+    sum
+}

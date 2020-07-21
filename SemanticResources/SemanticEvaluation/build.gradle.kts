@@ -11,5 +11,5 @@ kotlin.target {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(project(":II"))
+    implementation(project(":SemanticResources"))
 }
