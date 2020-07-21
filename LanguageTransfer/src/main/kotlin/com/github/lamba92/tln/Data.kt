@@ -12,11 +12,13 @@ inline class GrammarElement(val literal: String)
 data class Grammar(val grammarRules: Set<ChomskyNormalFormGrammarRule>) {
     override fun toString() = buildString {
         grammarRules.forEach { (lhs, rhs) ->
-            appendln(
-                "${lhs.literal} -> ${when (rhs) {
-                    is RHS.Terminal -> "'${rhs.element.literal}'"
-                    is RHS.NonTerminals -> "${rhs.element1.literal} ${rhs.element2.literal}"
-                }}"
+            appendLine(
+                "${lhs.literal} -> ${
+                    when (rhs) {
+                        is RHS.Terminal -> "'${rhs.element.literal}'"
+                        is RHS.NonTerminals -> "${rhs.element1.literal} ${rhs.element2.literal}"
+                    }
+                }"
             )
         }
     }

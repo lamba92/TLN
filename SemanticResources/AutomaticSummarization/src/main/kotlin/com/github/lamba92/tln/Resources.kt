@@ -61,7 +61,7 @@ object Resources {
         }
     }
 
-    suspend fun retrieveNasariUnifiedData(): File {
+    private suspend fun retrieveNasariUnifiedData(): File {
         val file = File("NASARI_unified.txt")
         if (file.exists().not() || file.length() <= 550 * 1024 * 1024)
             downloadNasari()
