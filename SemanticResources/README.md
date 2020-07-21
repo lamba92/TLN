@@ -7,6 +7,10 @@
     - [code](/ConceptualSimilarity) 
  - [Word Sense Disambiguation](#word-sense-disambiguation)
     - [External Colab notebook](https://colab.research.google.com/drive/1TgXt3uMpd4FZG-PgVUpmX8BIU2VbmQ8c?usp=sharing)
+ - FrameNet (documentations incoming)
+    - [External Colab notebook](https://colab.research.google.com/drive/1TgXt3uMpd4FZG-PgVUpmX8BIU2VbmQ8c?usp=sharing)
+ - Automatic Summarization (documentations incoming)
+    - [code](/AutomaticSummarization) 
 
 ### Introduction
 This sections shows how to use some available Semantic Resources like FrameNet, WordNet, Nasari, BabelNet and SemCor.
@@ -106,3 +110,4 @@ Results:
 |  | Lesk v1 | Lesk v2 | Lesk v3 |
 | ------------- | ------------- | ------------- | ------------- |
 | **Accuracy**         |  0.46  | 0.46  | 0.56 |  
+
