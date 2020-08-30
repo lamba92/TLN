@@ -99,23 +99,21 @@ object BabelNetApi {
 
     @KtorExperimentalAPI
     private suspend fun httpCallOrNull(lemma: String, lang: String = "IT", apiKey: String) =
-        try {
+        runCatching {
             HTTP_CLIENT.get<List<NetIdQuery>>("https://babelnet.io/v5/getSynsetIds") {
                 parameter("lemma", lemma)
                 parameter("searchLang", lang)
                 parameter("key", apiKey)
             }
-        } catch (e: Throwable) {
-            null
-        }
-            ?.map { it.id }
-            .let {
-                when {
-                    it == null -> LemmaLookupResult.ApiKeyLimitReached
-                    it.isEmpty() -> LemmaLookupResult.NotFoundGlobally
-                    else -> LemmaLookupResult.Found(it)
+        }.let {
+            when {
+                it.isSuccess -> when {
+                    it.getOrThrow().isEmpty() -> LemmaLookupResult.NotFoundGlobally
+                    else -> LemmaLookupResult.Found(it.getOrThrow().map { it.id })
                 }
+                else -> LemmaLookupResult.ApiKeyLimitReached
             }
+        }
 
     private suspend fun cacheBabelNetSynsetsByLemma(lemma: String, synsetsIds: List<String>?, db: Database) =
         newSuspendedTransaction(
