@@ -4,19 +4,12 @@ plugins {
 
 dependencies {
 
+    val graphstreamVersion: String by project
+    val kresourceloaderVersion: String by project
+
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.graphstream", "gs-core", "1.3")
-    implementation("org.graphstream", "gs-ui", "1.3")
-    implementation("com.github.lamba92", "kresourceloader", "1.1.1")
+    implementation("org.graphstream", "gs-core", graphstreamVersion)
+    implementation("org.graphstream", "gs-ui", graphstreamVersion)
+    implementation("com.github.lamba92", "kresourceloader", kresourceloaderVersion)
 
-}
-
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-        kotlinOptions.freeCompilerArgs = listOf("-Xinline-classes")
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
 }

@@ -7,7 +7,7 @@ sealed class RHS {
     data class NonTerminals(val element1: GrammarElement, val element2: GrammarElement) : RHS()
 }
 
-inline class GrammarElement(val literal: String)
+class GrammarElement(val literal: String)
 
 data class Grammar(val grammarRules: Set<ChomskyNormalFormGrammarRule>) {
     override fun toString() = buildString {

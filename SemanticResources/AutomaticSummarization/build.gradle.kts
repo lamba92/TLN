@@ -3,13 +3,12 @@ plugins {
     kotlin("plugin.serialization")
 }
 
-kotlin.target.compilations.all {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+
+    val apacheCompressVersion: String by project
+    val apacheIoVersion: String by project
+
     implementation(project(":SemanticResources"))
-    implementation("org.apache.commons", "commons-compress", "1.20")
-    implementation("commons-io", "commons-io", "2.7")
+    implementation("org.apache.commons", "commons-compress", apacheCompressVersion)
+    implementation("commons-io", "commons-io", apacheIoVersion)
 }

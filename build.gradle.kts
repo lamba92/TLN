@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") apply false
 }
@@ -9,9 +11,12 @@ allprojects {
     repositories {
         jcenter()
         maven("https://jitpack.io")
-        maven("https://dl.bintray.com/kotlin/kotlin-eap")
         maven("https://dl.bintray.com/mipt-npm/scientifik")
-        maven("https://kotlin.bintray.com/kotlinx")
-        maven("https://kotlin.bintray.com/ktor/")
+    }
+}
+
+subprojects {
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
     }
 }
