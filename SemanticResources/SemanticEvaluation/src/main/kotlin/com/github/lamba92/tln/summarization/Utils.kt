@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import io.ktor.util.*
 import org.apache.commons.math3.util.MathArrays

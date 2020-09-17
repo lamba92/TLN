@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import it.lamba.utils.getResource
 import net.sf.extjwnl.data.POS

@@ -7,15 +7,15 @@
     - [code](/ConceptualSimilarity) 
  - [Word Sense Disambiguation](#word-sense-disambiguation)
     - [External Colab notebook](https://colab.research.google.com/drive/1TgXt3uMpd4FZG-PgVUpmX8BIU2VbmQ8c?usp=sharing)
- - FrameNet (documentations incoming)
+ - [FrameNet](#framenet)
     - [External Colab notebook](https://colab.research.google.com/drive/197TvEHI6po328nwBvYzWOk3eS3jJBb--?usp=sharing)
- - Automatic Summarization (documentations incoming)
+ - [Automatic Summarization](#automatic-summarization)
     - [code](/AutomaticSummarization) 
 
 ### Introduction
 This sections shows how to use some available Semantic Resources like FrameNet, WordNet, Nasari, BabelNet and SemCor.
 
-Also, many semantic disambiguation algorithms where implemented, both in Kotlin and Python.
+Also, many semantic disambiguation algorithms where implemented, both in Kotlin and Python. Why Kotlin? Well, Python is from 1994, Kotlin is 3 years old... Whenever semantic resources where available for one of the backends of Kotlin (JS, JVM, Native) we went for Kotlin for faster development time! 
 
 ### Conceptual Similarity
 Given 2 input terms, a conceptual similarity task involves finding a similarity score based of their semantic similarity.
@@ -112,25 +112,32 @@ Results:
 | **Accuracy**         |  0.46  | 0.46  | 0.56 |  
 
 
-###FrameNet
+### FrameNet
 
-Come prima operazione si individua un insieme di frame mediante la funzione getFrameSetForStudent(cognome).
+First operation is to find a set of Frames using `get_frame_set_for_student(surname)`. Afterward for each Frame in the set we assigned a WordNet Synset at each of:
+- Frame name
+- Frame Elements (FEs)
+- Lexical Units (LUs)
 
-In seguito per ogni frame nel FrameSet è necessario assegnare un WN synset ai seguenti elementi: 
-- Frame name;
-- Frame Elements (FEs) del frame; 
-- Lexical Units (LUs).
+Now, using the **bag of words** algorithm, a contex was created from every synset looked up from lemmas of the previous list and compared with the context of the Frame.
+The Frame context has been built getting every word and stemming them from:
+ - Frame Name
+ - definitions
+ - for each LE:
+   - name
+   - definition
+   - examples
+ - Frame Elements names
+ 
+The synset context has been build getting every word and stemming them from:
+ - definition
+ - examples
+ - lemma names
 
-A questo punto si esegue un mapping tramite l'approccio di **bag of words** con la seguente formula:
-
+Bag of words formula:
 ![proj image](assets/bag_of_word.png)
 
-Come sempre i dati non valgono molto senza una valutazione.
-A questo fine è necessario annotare con WN synset ID tutti gli elementi da mappare:
-
-- Frame name
-- Frame Elements (FEs) del frame;
-- Lexical Units (LUs).
+After selecting the synset with the highest score for each item of the frame, everything is printed out, for each frame for both students:
 
 Student: **Basti**
 
@@ -152,6 +159,5 @@ Student: **Pregno**
 | 2654 | Controller_object | 
 | 156 | Measure_area | 
 
-Infine si esegue il rapporto fra l'output del sistema e le annotazioni manuali per vedere quanto queste si discostino.
+### Automatic Summarization
 
-###Automatic Summarization

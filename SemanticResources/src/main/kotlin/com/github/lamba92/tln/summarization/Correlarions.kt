@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import org.apache.commons.math3.stat.correlation.Covariance
 import org.apache.commons.math3.stat.ranking.NaturalRanking

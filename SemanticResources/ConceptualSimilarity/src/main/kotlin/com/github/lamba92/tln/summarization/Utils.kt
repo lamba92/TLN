@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 fun extractWordSimResource(): List<ResourceLine> {
     return Thread.currentThread().contextClassLoader

@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -49,6 +49,7 @@ object Resources {
                 delete()
                 createNewFile()
             }.writeChannel())
+            httpClient.close()
         }
         return file
     }
@@ -67,12 +68,8 @@ object Resources {
             downloadNasari()
                 .inputStream()
                 .buffered()
-                .letWithContext(Dispatchers.IO) {
-                    GzipCompressorInputStream(it)
-                }
-                .letWithContext(Dispatchers.IO) {
-                    TarArchiveInputStream(it)
-                }
+                .letWithContext(Dispatchers.IO) { GzipCompressorInputStream(it) }
+                .letWithContext(Dispatchers.IO) { TarArchiveInputStream(it) }
                 .let {
                     val tarEntry = it.nextTarEntry
                     if (tarEntry.name != "dd-nasari.txt")

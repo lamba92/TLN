@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import net.sf.extjwnl.dictionary.Dictionary
 import kotlin.math.log10

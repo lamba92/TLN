@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*

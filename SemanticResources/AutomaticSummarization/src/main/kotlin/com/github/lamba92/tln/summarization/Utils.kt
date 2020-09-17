@@ -1,4 +1,4 @@
-package com.github.lamba92.tln
+package com.github.lamba92.tln.summarization
 
 import java.io.File
 
@@ -32,4 +32,15 @@ fun parseDocument(f: File): Document {
 }
 
 data class Document(val link: String, val title: String, val paragraphs: List<String>)
-data class WordScore(val word: String, val score: Double)
+
+fun String.tokenize() =
+    split(" ")
+        .asSequence()
+        .flatMap { it.split(".") }
+        .flatMap { it.split(",") }
+        .flatMap { it.split(";") }
+        .map { it.filter { it.isLetterOrDigit() } }
+        .map { it.toLowerCase() }
+        .filter { it.isNotBlank() }
+        .filter { it.isNotEmpty() }
+        .toList()
