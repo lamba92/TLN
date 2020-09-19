@@ -1,6 +1,5 @@
 package com.github.lamba92.tln.summarization.nasari
 
-import com.github.lamba92.tln.nasari.NasariApi
 import com.github.lamba92.tln.summarization.NasariComparisonItem
 import com.github.lamba92.tln.summarization.NasariUnifiedArray
 import io.ktor.util.*

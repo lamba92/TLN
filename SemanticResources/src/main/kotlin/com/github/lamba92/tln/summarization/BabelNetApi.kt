@@ -49,7 +49,8 @@ object BabelNetApi {
     }
 
     private val BABEL_NET_API_KEYS by lazy {
-        System.getenv("BABEL_NET_API_KEY").split(";").iterator()
+        (System.getenv("BABEL_NET_API_KEY") ?: "")
+            .split(";").iterator()
     }
 
     private var CURRENT_API_KEY = BABEL_NET_API_KEYS.next()

@@ -16,10 +16,13 @@ fun spearmanRankCorrelationCoefficient(
     targetValues: List<Double>,
     obtainedValues: List<Double>
 ): Double {
-    val t = NaturalRanking().rank(targetValues.toDoubleArray())
-    val o = NaturalRanking().rank(obtainedValues.toDoubleArray())
+    val t = targetValues.naturalRanking()
+    val o = obtainedValues.naturalRanking()
     return t.covarianceWith(o) / (t.standardDeviation() * o.standardDeviation())
 }
+
+fun List<Double>.naturalRanking() =
+    NaturalRanking().rank(toDoubleArray())!!
 
 fun List<Double>.covarianceWith(other: List<Double>) =
     Covariance().covariance(this.toDoubleArray(), other.toDoubleArray())

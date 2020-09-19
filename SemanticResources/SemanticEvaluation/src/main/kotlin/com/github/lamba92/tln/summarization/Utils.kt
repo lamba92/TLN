@@ -71,5 +71,5 @@ fun Iterable<Double>.mean() = with(iterator()) {
         size++
         sum += next()
     }
-    sum
+    sum / size
 }

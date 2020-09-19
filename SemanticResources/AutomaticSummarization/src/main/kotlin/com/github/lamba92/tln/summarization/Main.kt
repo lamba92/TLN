@@ -1,6 +1,6 @@
 package com.github.lamba92.tln.summarization
 
-import com.github.lamba92.tln.nasari.NasariApi
+import com.github.lamba92.tln.summarization.nasari.NasariApi
 import com.github.lamba92.tln.summarization.nasari.weightedOverlap
 import io.ktor.util.*
 import kotlinx.coroutines.FlowPreview
@@ -20,6 +20,9 @@ suspend fun main() {
             delete()
         createNewFile()
     }
+
+    NasariApi.initialize()
+
     Resources.Corpus.ALL.forEach { document ->
 
         val titleContext = document.title

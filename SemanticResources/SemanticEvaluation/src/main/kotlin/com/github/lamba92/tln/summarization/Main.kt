@@ -30,9 +30,6 @@ suspend fun main() {
         pregno.map { it.score.toDouble() }
     )
 
-    println("Pearson correlation value is: $pearson")
-    println("Spearman correlation value is: $spearman")
-
     val nasari = Resources.MINI_NASARI
 
     val nasariSimilarityScores = basti
@@ -40,9 +37,12 @@ suspend fun main() {
         .map { nasari.senseSimilarity(it.word1, it.word2) }
         .toList()
 
+    println("Basti - Pregno Pearson correlation value is: " + "%.4f".format(pearson))
+    println("Basti - Pregno Spearman correlation value is: " + "%.4f".format(spearman))
+
     println("Best senses found:")
     nasariSimilarityScores.filterNotNull().forEach { (w1, s1, w2, s2, cs) ->
-        println(" - $w1 -> $s1 | $w2 -> $s2 | cosine similarity: $cs")
+        println(" - $w1 -> $s1 | $w2 -> $s2 | cosine similarity: " + "%.2f".format(cs))
     }
 
     val nasariSimilarityScoresMean =
@@ -51,29 +51,29 @@ suspend fun main() {
 
     val bastiNasariPearsonScore = pearsonCorrelationCoefficient(
         nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
-        basti.map { it.score.toDouble() }
+        basti.map { it.score.toDouble() / 4 }
     )
 
     val bastiNasariSpearmanScore = spearmanRankCorrelationCoefficient(
         nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
-        basti.map { it.score.toDouble() }
+        basti.map { it.score.toDouble() / 4 }
     )
 
     val pregnoNasariPearsonScore = spearmanRankCorrelationCoefficient(
         nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
-        pregno.map { it.score.toDouble() }
+        pregno.map { it.score.toDouble() / 4 }
     )
 
     val pregnoNasariSpearmanScore = spearmanRankCorrelationCoefficient(
         nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
-        pregno.map { it.score.toDouble() }
+        pregno.map { it.score.toDouble() / 4 }
     )
 
     println("Scores using Nasari:")
-    println(" - Basti | Pearson: $bastiNasariPearsonScore")
-    println(" - Basti | Spearman: $bastiNasariSpearmanScore")
-    println(" - Pregno | Pearson: $pregnoNasariPearsonScore")
-    println(" - Pregno | Spearman: $pregnoNasariSpearmanScore")
+    println(" - Basti | Pearson: " + "%.4f".format(bastiNasariPearsonScore))
+    println(" - Basti | Spearman: " + "%.4f".format(bastiNasariSpearmanScore))
+    println(" - Pregno | Pearson: " + "%.4f".format(pregnoNasariPearsonScore))
+    println(" - Pregno | Spearman: " + "%.4f".format(pregnoNasariSpearmanScore))
 
 
 }

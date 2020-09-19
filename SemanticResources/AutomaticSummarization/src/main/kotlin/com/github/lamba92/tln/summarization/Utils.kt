@@ -1,10 +1,12 @@
 package com.github.lamba92.tln.summarization
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.apache.commons.codec.digest.DigestUtils
 import java.io.File
 
 data class NasariComparisonItem(val lemma: String, val score: Double)
-data class NasariUnifiedArray(val babelNetId: String, val lemma: String, val data: List<NasariComparisonItem>)
+data class NasariUnifiedArray(val babelNetId: String, val data: List<NasariComparisonItem>)
 
 typealias NasariUnified = Map<String, NasariUnifiedArray>
 
@@ -46,5 +48,13 @@ fun String.tokenize() =
         .filter { it.isNotEmpty() }
         .toList()
 
-fun File.md5() =
+fun File.md5Hex() =
     DigestUtils.md5Hex(inputStream())!!
+
+suspend inline fun <T, R> T.letWithContext(
+    dispatcher: CoroutineDispatcher, crossinline block: (T) -> R
+) = let {
+    withContext(dispatcher) {
+        block(it)
+    }
+}
