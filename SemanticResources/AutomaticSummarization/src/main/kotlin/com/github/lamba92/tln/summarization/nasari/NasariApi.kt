@@ -30,11 +30,6 @@ object NasariApi {
 
     private val FILE_DATABASE_CACHE by lazy {
         Database.connect("jdbc:sqlite:NasariCache.db")
-            .also {
-                transaction(Connection.TRANSACTION_SERIALIZABLE, 1, it) {
-                    SchemaUtils.createMissingTablesAndColumns(NasariTable)
-                }
-            }
     }
 
     private val IN_MEMORY_DATABASE_CACHE by lazy {
@@ -55,7 +50,8 @@ object NasariApi {
         val action: suspend (Transaction.() -> NasariUnifiedArray?) = {
             NasariTable.select { NasariTable.babelNetId eq id }.map {
                 NasariComparisonItem(it[NasariTable.lemma], it[NasariTable.score])
-            }.let { NasariUnifiedArray(id, it) }
+            }.takeIf { it.isNotEmpty() }
+                ?.let { NasariUnifiedArray(id, it) }
         }
         return defaultTransaction(IN_MEMORY_DATABASE_CACHE, action) ?: defaultTransaction(
             FILE_DATABASE_CACHE,
@@ -82,10 +78,15 @@ object NasariApi {
 
     @OptIn(KtorExperimentalAPI::class)
     suspend fun initialize() {
-        if (defaultTransaction(FILE_DATABASE_CACHE) { NasariTable.selectAll().count() != 32_146_863L }) {
+        val isDBOk = defaultTransaction(FILE_DATABASE_CACHE) {
+            SchemaUtils.createMissingTablesAndColumns(NasariTable)
+            NasariTable.selectAll().count() != 32_146_863L
+        }
+        if (isDBOk) {
             File("NasariCache.db").delete()
             val txt = retrieveNasariUnifiedData()
             defaultTransaction(FILE_DATABASE_CACHE) {
+                SchemaUtils.createMissingTablesAndColumns(NasariTable)
                 txt.forEachLine { line ->
                     val splitLine = line.split(";")
                     val babelId = splitLine.first()
