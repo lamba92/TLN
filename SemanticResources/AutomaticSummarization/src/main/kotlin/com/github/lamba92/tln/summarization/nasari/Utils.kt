@@ -1,9 +1,8 @@
 package com.github.lamba92.tln.summarization.nasari
 
-import com.github.lamba92.tln.summarization.BabelNetApi
+import com.github.lamba92.tln.nasari.NasariApi
 import com.github.lamba92.tln.summarization.NasariComparisonItem
-import com.github.lamba92.tln.summarization.NasariUnified
-import com.github.lamba92.tln.summarization.NasariUnifiedElement
+import com.github.lamba92.tln.summarization.NasariUnifiedArray
 import io.ktor.util.*
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -14,24 +13,20 @@ suspend inline fun <T, R, K> Flow<T>.combineWith(other: Iterable<R>, crossinline
     flatMapConcat { t: T -> other.map { r: R -> function(t, r) }.asFlow() }
 
 @KtorExperimentalAPI
-suspend fun NasariUnified.getVectorsByLemma(lemma: String, lang: String) =
-    BabelNetApi.lookupBabelSynsetsByLemma(lemma, lang).mapNotNull { get(it) }
-
-@KtorExperimentalAPI
 @FlowPreview
-suspend fun NasariUnified.weightedOverlap(
+suspend fun NasariApi.weightedOverlap(
     sentence: Sequence<String>,
-    contexts: List<NasariUnifiedElement>,
+    contexts: List<NasariUnifiedArray>,
     lang: String
 ) =
     weightedOverlap(sentence.toList(), contexts, lang)
 
 @FlowPreview
 @KtorExperimentalAPI
-suspend fun NasariUnified.weightedOverlap(sentence: List<String>, contexts: List<NasariUnifiedElement>, lang: String) =
+suspend fun NasariApi.weightedOverlap(sentence: List<String>, contexts: List<NasariUnifiedArray>, lang: String) =
     sentence.asFlow()
         .map {
-            getVectorsByLemma(it, lang)
+            lookupArraysByLemma(it, lang)
                 .asFlow()
                 .combineWith(contexts) { vector1, vector2 -> sqrt(weightedOverlap(vector1.data, vector2.data)) }
                 .toList()
@@ -41,12 +36,12 @@ suspend fun NasariUnified.weightedOverlap(sentence: List<String>, contexts: List
         .sumByDouble { it }
 
 fun rank(elem: String, vector2: List<NasariComparisonItem>) =
-    vector2.indexOfFirst { it.name == elem } + 1
+    vector2.indexOfFirst { it.lemma == elem } + 1
 
 fun weightedOverlap(vector1: List<NasariComparisonItem>, vector2: List<NasariComparisonItem>): Double {
 
-    val m1 = vector1.associate { it.name to it.score }
-    val m2 = vector2.associate { it.name to it.score }
+    val m1 = vector1.associate { it.lemma to it.score }
+    val m2 = vector2.associate { it.lemma to it.score }
 
     val keyIntersection = m1.keys.filter { it in m2.keys }.toSet()
 

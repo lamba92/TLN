@@ -1,11 +1,12 @@
 package com.github.lamba92.tln.summarization
 
+import org.apache.commons.codec.digest.DigestUtils
 import java.io.File
 
-data class NasariComparisonItem(val name: String, val score: Double)
-data class NasariUnifiedElement(val babelNetId: String, val data: List<NasariComparisonItem>)
+data class NasariComparisonItem(val lemma: String, val score: Double)
+data class NasariUnifiedArray(val babelNetId: String, val lemma: String, val data: List<NasariComparisonItem>)
 
-typealias NasariUnified = Map<String, NasariUnifiedElement>
+typealias NasariUnified = Map<String, NasariUnifiedArray>
 
 private fun Collection<String>.mergeIf(function: (String, String) -> Boolean): Collection<String> {
     if (size < 2)
@@ -44,3 +45,6 @@ fun String.tokenize() =
         .filter { it.isNotBlank() }
         .filter { it.isNotEmpty() }
         .toList()
+
+fun File.md5() =
+    DigestUtils.md5Hex(inputStream())!!

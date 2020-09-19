@@ -1,6 +1,6 @@
 package com.github.lamba92.tln.summarization
 
-import com.github.lamba92.tln.summarization.nasari.getVectorsByLemma
+import com.github.lamba92.tln.nasari.NasariApi
 import com.github.lamba92.tln.summarization.nasari.weightedOverlap
 import io.ktor.util.*
 import kotlinx.coroutines.FlowPreview
@@ -15,7 +15,6 @@ import java.io.File
 @ExperimentalStdlibApi
 suspend fun main() {
 
-    val nasari = Resources.getNasariUnified()
     val output = File("summarization.txt").apply {
         if (exists())
             delete()
@@ -26,12 +25,12 @@ suspend fun main() {
         val titleContext = document.title
             .tokenize()
             .asFlow()
-            .map { nasari.getVectorsByLemma(it, "EN") }
+            .map { NasariApi.lookupArraysByLemma(it, "EN") }
             .toList()
 
         val (index, score) = document.paragraphs.asFlow()
             .map { it.tokenize().filter { it !in Resources.STOPWORDS } }
-            .map { paragraphWords -> titleContext.sumByDouble { nasari.weightedOverlap(paragraphWords, it, "EN") } }
+            .map { paragraphWords -> titleContext.sumByDouble { NasariApi.weightedOverlap(paragraphWords, it, "EN") } }
             .withIndex()
             .toList()
             .maxByOrNull { it.value }!!
