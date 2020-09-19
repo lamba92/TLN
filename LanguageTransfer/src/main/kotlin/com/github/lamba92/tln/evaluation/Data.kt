@@ -1,4 +1,4 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
 data class ChomskyNormalFormGrammarRule(val lhs: GrammarElement, val rhs: RHS)
 

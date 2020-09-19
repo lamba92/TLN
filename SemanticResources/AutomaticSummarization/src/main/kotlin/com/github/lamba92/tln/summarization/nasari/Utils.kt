@@ -11,15 +11,6 @@ import kotlin.math.sqrt
 suspend inline fun <T, R, K> Flow<T>.combineWith(other: Iterable<R>, crossinline function: suspend (T, R) -> K) =
     flatMapConcat { t: T -> other.map { r: R -> function(t, r) }.asFlow() }
 
-@KtorExperimentalAPI
-@FlowPreview
-suspend fun NasariApi.weightedOverlap(
-    sentence: Sequence<String>,
-    contexts: List<NasariUnifiedArray>,
-    lang: String
-) =
-    weightedOverlap(sentence.toList(), contexts, lang)
-
 @FlowPreview
 @KtorExperimentalAPI
 suspend fun NasariApi.weightedOverlap(sentence: List<String>, contexts: List<NasariUnifiedArray>, lang: String) =
@@ -27,15 +18,15 @@ suspend fun NasariApi.weightedOverlap(sentence: List<String>, contexts: List<Nas
         .map {
             lookupArraysByLemma(it, lang)
                 .asFlow()
-                .combineWith(contexts) { vector1, vector2 -> sqrt(weightedOverlap(vector1.data, vector2.data)) }
+                .combineWith(contexts) { vector1, vector2 -> senseSimilarity(vector1, vector2) }
                 .toList()
                 .maxByOrNull { it } ?: 0.0
         }
         .toList()
         .sumByDouble { it }
 
-fun rank(elem: String, vector2: List<NasariComparisonItem>) =
-    vector2.indexOfFirst { it.lemma == elem } + 1
+fun senseSimilarity(vector1: NasariUnifiedArray, vector2: NasariUnifiedArray) =
+    sqrt(weightedOverlap(vector1.data, vector2.data))
 
 fun weightedOverlap(vector1: List<NasariComparisonItem>, vector2: List<NasariComparisonItem>): Double {
 
@@ -52,3 +43,6 @@ fun weightedOverlap(vector1: List<NasariComparisonItem>, vector2: List<NasariCom
         0.0
 
 }
+
+fun rank(elem: String, vector2: List<NasariComparisonItem>) =
+    vector2.indexOfFirst { it.lemma == elem } + 1

@@ -1,4 +1,4 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
 import org.jetbrains.exposed.sql.Table
 

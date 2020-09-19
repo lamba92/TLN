@@ -1,4 +1,4 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 import java.sql.Connection
 
 object BabelNetApi {
@@ -49,8 +50,14 @@ object BabelNetApi {
     }
 
     private val BABEL_NET_API_KEYS by lazy {
-        (System.getenv("BABEL_NET_API_KEY") ?: "")
-            .split(";").iterator()
+        (System.getenv("BABEL_NET_API_KEY")
+            ?: File("babel_net_keys.txt")
+                .takeIf { it.exists() }
+                ?.readText()
+                ?.takeIf { it.isNotBlank() }
+            ?: throw error("No BabelNetApi keys found. Please create babel_net_keys.txt in the CWD with the keys separated by semicolons or set BABEL_NET_API_KEY environment variable."))
+            .split(";")
+            .iterator()
     }
 
     private var CURRENT_API_KEY = BABEL_NET_API_KEYS.next()

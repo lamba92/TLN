@@ -1,17 +1,11 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.semanticevaluation
 
+import com.github.lamba92.tln.evaluation.pearsonCorrelationCoefficient
+import com.github.lamba92.tln.evaluation.spearmanRankCorrelationCoefficient
 import io.ktor.util.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import net.sf.extjwnl.data.POS
-
-data class BabelNetSynsetId(val id: Long, val pos: POS, val name: String? = null) {
-    override fun toString() =
-        "bn:$id${pos.key}"
-}
-
-data class ManualAnnotation(val word1: String, val word2: String, val score: Float)
 
 @KtorExperimentalAPI
 @ExperimentalStdlibApi

@@ -8,26 +8,6 @@ import java.io.File
 data class NasariComparisonItem(val lemma: String, val score: Double)
 data class NasariUnifiedArray(val babelNetId: String, val data: List<NasariComparisonItem>)
 
-typealias NasariUnified = Map<String, NasariUnifiedArray>
-
-private fun Collection<String>.mergeIf(function: (String, String) -> Boolean): Collection<String> {
-    if (size < 2)
-        return this
-    val iter = iterator()
-    var left = iter.next()
-    val result = mutableListOf<String>()
-    while (iter.hasNext()) {
-        val right = iter.next()
-        left = if (function(left, right))
-            "$left;$right"
-        else {
-            result.add(left)
-            right
-        }
-    }
-    return result
-}
-
 fun parseDocument(f: File): Document {
     val lines = f.readLines()
         .filter { it.isNotBlank() }

@@ -1,6 +1,6 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
-import com.github.lamba92.tln.summarization.BinaryTree.Node
+import com.github.lamba92.tln.evaluation.BinaryTree.Node
 
 class ChomskyMatrix(grammar: Grammar, words: List<String>) {
 

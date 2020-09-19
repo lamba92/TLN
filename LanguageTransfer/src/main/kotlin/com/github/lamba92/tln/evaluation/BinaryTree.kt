@@ -1,4 +1,4 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
 class BinaryTree<K>(val root: Node<K>) : Iterable<BinaryTree.Node<K>> {
     override fun iterator() = iterator {

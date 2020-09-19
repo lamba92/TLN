@@ -1,6 +1,10 @@
 package com.github.lamba92.tln.summarization.nasari
 
-import com.github.lamba92.tln.summarization.*
+import com.github.lamba92.tln.evaluation.BabelNetApi
+import com.github.lamba92.tln.summarization.NasariComparisonItem
+import com.github.lamba92.tln.summarization.NasariUnifiedArray
+import com.github.lamba92.tln.summarization.letWithContext
+import com.github.lamba92.tln.summarization.md5Hex
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*

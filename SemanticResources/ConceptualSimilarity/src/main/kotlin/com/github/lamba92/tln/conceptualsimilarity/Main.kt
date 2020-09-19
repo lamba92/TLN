@@ -1,5 +1,7 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.conceptualsimilarity
 
+import com.github.lamba92.tln.evaluation.*
+import it.lamba.utils.getResource
 import net.sf.extjwnl.dictionary.Dictionary
 
 data class ResourceLine(val word1: String, val word2: String, val score: Double)
@@ -28,3 +30,16 @@ fun main() {
     println("LC: " + spearmanRankCorrelationCoefficient(lcScores, targetValues))
     println("SP: " + spearmanRankCorrelationCoefficient(spScores, targetValues))
 }
+
+fun extractWordSimResource() =
+    getResource("WordSim353.csv")
+        .readLines()
+        .asSequence()
+        .drop(1)
+        .filter { it.isNotEmpty() }
+        .map {
+            it.split(",").let { (w1, w2, s) ->
+                ResourceLine(w1.filter { !it.isWhitespace() }, w2.filter { !it.isWhitespace() }, s.toDouble() / 10)
+            }
+        }
+        .toList()

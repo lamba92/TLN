@@ -1,4 +1,4 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
 import net.sf.extjwnl.data.POS
 import net.sf.extjwnl.data.PointerType

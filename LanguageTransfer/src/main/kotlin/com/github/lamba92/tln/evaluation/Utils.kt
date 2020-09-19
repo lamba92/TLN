@@ -1,4 +1,4 @@
-package com.github.lamba92.tln.summarization
+package com.github.lamba92.tln.evaluation
 
 import it.lamba.utils.getResource
 import org.graphstream.graph.Edge
