@@ -8,7 +8,7 @@
  - [Word Sense Disambiguation](#word-sense-disambiguation)
     - [External Colab notebook](https://colab.research.google.com/drive/1TgXt3uMpd4FZG-PgVUpmX8BIU2VbmQ8c?usp=sharing)
  - [FrameNet](#framenet)
-    - [External Colab notebook](https://colab.research.google.com/drive/197TvEHI6po328nwBvYzWOk3eS3jJBb--?usp=sharing)
+    - [External Colab notebook](https://colab.research.google.com/drive/1derh5hKydkMbGtjvk6Vd1RXr3COGINwF?authuser=1)
  - [Automatic Summarization](#automatic-summarization)
     - [code](/AutomaticSummarization) 
 
