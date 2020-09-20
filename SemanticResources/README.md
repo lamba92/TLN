@@ -161,3 +161,29 @@ Student: **Pregno**
 
 ### Automatic Summarization
 
+The purpose of this exercise is to produce brief of a text including the more relevant information.
+The text to summarize for this task are in the resource/corpus directory.
+
+In order to accomplish the goal we procede splitting every text in two parts:
+1. title
+2. paragraphs
+
+on both parts we perform a "cleaning" removing the stopwords and tokenizing.
+
+In order to extract the most significant paragraph, 
+we calculate the similarity between the title and every paragraph taking the one with the highest score.
+
+More in detail:
+- for every word of title: we take the Nasari ids (trough the corresponding Bablesynset id)
+    - for every paragraph
+        - for every word of this paragraph: we do the same of title and take the Nasari ids
+        we compute the Weighted Overlap between the title and the paragraph word as follows:
+        
+            ![WO](assets/weightedOverlap.png)
+        
+        - then we take the max of the square root of the WO
+        
+            ![MS](assets/maxSimilarity.png)
+        
+Now we have the similarity between every word in the title and in the paragraphs.
+Simply sum up every score of the words in each paragraph taking the one with the maximum sum.
