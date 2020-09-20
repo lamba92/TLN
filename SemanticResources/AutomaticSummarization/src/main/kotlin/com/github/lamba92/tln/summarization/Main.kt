@@ -38,7 +38,7 @@ suspend fun main() {
             .toList()
             .maxByOrNull { it.value }!!
 
-        output.appendText("\nDocument titled '${document.title}' best paragraph, with score $score is:")
+        output.appendText("\nDocument titled '" + document.title + "' best paragraph, with score %.4f".format(score) + " is:")
         output.appendText("\n - ${document.paragraphs[index]}")
         output.appendText("\n____________________________________________________________________________")
 
