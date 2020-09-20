@@ -28,10 +28,6 @@ object NasariApi {
     private const val TGZ_CHECKSUM = "5eb3f4f9ca6fcf9d3d0f2d4b782658fe"
     private const val TXT_CHECKSUM = "e910d0c05e26127949433fee4d2d8729"
 
-    private val FILE_DATABASE_CACHE by lazy {
-        Database.connect("jdbc:sqlite:NasariCache.db")
-    }
-
     private val IN_MEMORY_DATABASE_CACHE by lazy {
         Database.connect("jdbc:h2:mem:NasariCache;DB_CLOSE_DELAY=-1")
             .also {
@@ -46,28 +42,16 @@ object NasariApi {
         BabelNetApi.lookupBabelSynsetsByLemma(lemma, lang)
             .mapNotNull { lookupArrayFromBabelNetId(it) }
 
-    suspend fun lookupArrayFromBabelNetId(id: String): NasariUnifiedArray? {
-        val action: suspend (Transaction.() -> NasariUnifiedArray?) = {
-            NasariTable.select { NasariTable.babelNetId eq id }.map {
-                NasariComparisonItem(it[NasariTable.lemma], it[NasariTable.score])
-            }.takeIf { it.isNotEmpty() }
-                ?.let { NasariUnifiedArray(id, it) }
-        }
-        return defaultTransaction(IN_MEMORY_DATABASE_CACHE, action) ?: defaultTransaction(
-            FILE_DATABASE_CACHE,
-            action
-        )?.also { array ->
-            defaultTransaction(IN_MEMORY_DATABASE_CACHE) {
-                array.data.forEach { element ->
-                    NasariTable.insert {
-                        it[babelNetId] = id
-                        it[lemma] = element.lemma
-                        it[score] = element.score
-                    }
-                }
+    suspend fun lookupArrayFromBabelNetId(id: String): NasariUnifiedArray? =
+        defaultTransaction(IN_MEMORY_DATABASE_CACHE) {
+            NasariTable.select { NasariTable.babelNetId eq id }.singleOrNull()?.let {
+                NasariUnifiedArray(id, it[NasariTable.values].split(";")
+                    .filter { it.isNotBlank() }
+                    .map { it.split("_") }
+                    .map { (lemma, score) -> NasariComparisonItem(lemma, score.toDouble()) })
             }
         }
-    }
+
 
     private suspend fun <T> defaultTransaction(db: Database, statement: suspend Transaction.() -> T) =
         newSuspendedTransaction(
@@ -78,31 +62,17 @@ object NasariApi {
 
     @OptIn(KtorExperimentalAPI::class)
     suspend fun initialize() {
-        val isDBOk = defaultTransaction(FILE_DATABASE_CACHE) {
+        val txt = retrieveNasariUnifiedData()
+        defaultTransaction(IN_MEMORY_DATABASE_CACHE) {
             SchemaUtils.createMissingTablesAndColumns(NasariTable)
-            NasariTable.selectAll().count() != 32_146_863L
-        }
-        if (isDBOk) {
-            File("NasariCache.db").delete()
-            val txt = retrieveNasariUnifiedData()
-            defaultTransaction(FILE_DATABASE_CACHE) {
-                SchemaUtils.createMissingTablesAndColumns(NasariTable)
-                txt.forEachLine { line ->
-                    val splitLine = line.split(";")
-                    val babelId = splitLine.first()
-                    splitLine.drop(2)
-                        .filter { it.isNotEmpty() }
-                        .map { it.split("_") }
-                        .filter { it.size > 1 }
-                        .map { (name, rawScore) ->
-                            NasariTable.insert {
-                                it[babelNetId] = babelId
-                                it[lemma] = name.take(15)
-                                it[score] = rawScore.toDouble()
-                            }
-                        }
-
+            txt.forEachLine { line ->
+                val splitLine = line.split(";")
+                NasariTable.insert {
+                    it[babelNetId] = splitLine.first()
+                    it[lemma] = splitLine[1].take(15)
+                    it[values] = splitLine.drop(2).joinToString(";")
                 }
+
             }
         }
     }
@@ -131,7 +101,7 @@ object NasariApi {
     }
 
     @KtorExperimentalAPI
-    private suspend fun retrieveNasariUnifiedData(): File {
+    suspend fun retrieveNasariUnifiedData(): File {
         val file = File("NASARI_unified.txt")
         if (file.exists().not() || file.md5Hex() != TXT_CHECKSUM)
             downloadNasari()
