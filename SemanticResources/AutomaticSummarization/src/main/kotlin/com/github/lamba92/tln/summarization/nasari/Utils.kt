@@ -1,15 +1,14 @@
 package com.github.lamba92.tln.summarization.nasari
 
+import com.github.lamba92.tln.evaluation.combineWith
 import com.github.lamba92.tln.summarization.NasariComparisonItem
 import com.github.lamba92.tln.summarization.NasariUnifiedArray
 import io.ktor.util.*
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlin.math.sqrt
-
-@FlowPreview
-suspend inline fun <T, R, K> Flow<T>.combineWith(other: Iterable<R>, crossinline function: suspend (T, R) -> K) =
-    flatMapConcat { t: T -> other.map { r: R -> function(t, r) }.asFlow() }
 
 @FlowPreview
 @KtorExperimentalAPI

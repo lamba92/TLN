@@ -1,5 +1,9 @@
 package com.github.lamba92.tln.evaluation
 
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flatMapConcat
 import net.sf.extjwnl.data.POS
 import net.sf.extjwnl.data.PointerType
 import net.sf.extjwnl.data.Synset
@@ -18,9 +22,11 @@ fun Synset.lowestCommonHypernyms(other: Synset) = buildList<Synset> {
     var parents1 = hypernyms
     var parents2 = other.hypernyms
 
-    fun s() = parents2.forEach {
-        if (it in parents1)
-            add(it)
+    val s = {
+        parents2.forEach {
+            if (it in parents1)
+                add(it)
+        }
     }
 
     s()
@@ -43,7 +49,6 @@ fun Synset.maxDepth(): Int {
 }
 
 fun Dictionary.synsets(word: String): Set<Synset> {
-    println("Looking up synsets for word $word")
     return listOf(POS.NOUN, POS.ADJECTIVE, POS.ADVERB, POS.VERB)
         .flatMap { getIndexWord(it, word)?.senses ?: emptyList() }
         .toSet()
@@ -87,3 +92,7 @@ inline fun <T, R> Iterable<T>.firstNotNull(function: (T) -> R?): R? {
     }
     return null
 }
+
+@FlowPreview
+inline fun <T, R, K> Flow<T>.combineWith(other: Iterable<R>, crossinline function: suspend (T, R) -> K) =
+    flatMapConcat { t: T -> other.map { r: R -> function(t, r) }.asFlow() }

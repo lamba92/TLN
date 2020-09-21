@@ -31,15 +31,10 @@ fun Dictionary.lcSimilarity(
     val w2Synsets = synsets(word2)
     synsets(word1).forEach { s1 ->
         w2Synsets.forEach { s2 ->
-            val dist = s1.shortestPathDistance(s2)
-            val sim = when {
-                dist == null -> 0.0
-                dist > 0 -> -log10(dist.toDouble() / (2 * maxDepth))
-                else -> -log10(dist.toDouble() / (2 * maxDepth))
-            }
-            max = max(max, sim)
+            max = max(max, s1.shortestPathDistance(s2)?.let { -log10(it.toDouble() / (2 * maxDepth)) } ?: 0.0)
         }
     }
+
     return if (normalized) max / log10((2 * maxDepth + 1).toDouble()) else max
 }
 
