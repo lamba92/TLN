@@ -48,11 +48,9 @@ fun Synset.maxDepth(): Int {
     return 1 + parents.map { it.maxDepth() }.maxOf { it }
 }
 
-fun Dictionary.synsets(word: String): Set<Synset> {
-    return listOf(POS.NOUN, POS.ADJECTIVE, POS.ADVERB, POS.VERB)
-        .flatMap { getIndexWord(it, word)?.senses ?: emptyList() }
-        .toSet()
-}
+fun Dictionary.synsets(word: String): Set<Synset> = POS.values()
+    .flatMap { getIndexWord(it, word)?.senses ?: emptyList() }
+    .toSet()
 
 val Synset.isRoot
     get() = hypernyms.isEmpty()
@@ -65,7 +63,7 @@ fun Synset.hypernymPathToRoot(): List<Synset> {
 }
 
 fun Dictionary.maxDepth() =
-    listOf(POS.NOUN, POS.ADJECTIVE, POS.ADVERB, POS.VERB)
+    POS.values()
         .flatMap { getSynsetIterator(it).asSequence() }
         .map { it.maxDepth() }
         .maxOrNull()!!

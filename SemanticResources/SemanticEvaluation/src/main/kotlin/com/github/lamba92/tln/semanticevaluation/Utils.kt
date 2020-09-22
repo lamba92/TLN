@@ -79,3 +79,11 @@ data class BabelNetSynsetId(val id: Long, val pos: POS, val name: String? = null
 }
 
 data class ManualAnnotation(val word1: String, val word2: String, val score: Float)
+
+@KtorExperimentalAPI
+suspend fun main() {
+    BabelNetApi.lookupBabelSynsetsByLemma("ciao", "IT")
+        .first()
+        .let { BabelNetApi.getBabelSynsetDetails(it) }
+        .let { println(it) }
+}
