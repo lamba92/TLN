@@ -53,7 +53,7 @@ suspend fun main() {
         basti.map { it.score.toDouble() / 4 }
     )
 
-    val pregnoNasariPearsonScore = spearmanRankCorrelationCoefficient(
+    val pregnoNasariPearsonScore = pearsonCorrelationCoefficient(
         nasariSimilarityScores.map { it?.cosineSimilarity ?: nasariSimilarityScoresMean },
         pregno.map { it.score.toDouble() / 4 }
     )
