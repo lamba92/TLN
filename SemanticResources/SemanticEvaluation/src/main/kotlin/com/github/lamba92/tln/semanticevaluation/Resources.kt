@@ -9,7 +9,6 @@ object Resources {
     private fun String.parseNasariLine() =
         drop(3).take(9) to substringAfter('\t')
 
-
     val MINI_NASARI: MiniNasari
         get() = buildMap {
             getResource("mini_nasari/mini_nasari.tsv").forEachLine {
